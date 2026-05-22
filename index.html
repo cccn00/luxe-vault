@@ -247,14 +247,122 @@
             width: 100%;
         }
         
-        .search-wrap input::placeholder { color:var(--gray2); }
-/* 頂部 header 的搜尋框（取代原本的麵包屑）*/
-.header-search {
-  flex: 0 0 auto; max-width: 260px; width: 260px;
-  padding: 8px 16px; margin-right: 10px;
-}
-.header-search input { font-size: 11px; letter-spacing: 0.5px; }
-@media (max-width: 980px) { .header-search { display: none; } }
+        .search-wrap input::placeholder {
+            color: var(--gray2);
+        }
+        /* 頂部 header 的搜尋框（取代原本的麵包屑）*/
+        
+        .header-search {
+            flex: 0 0 auto;
+            max-width: 260px;
+            width: 260px;
+            padding: 8px 16px;
+            margin-right: 10px;
+        }
+        
+        .header-search input {
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        
+        @media (max-width: 980px) {
+            .header-search {
+                display: none;
+            }
+        }
+        /* 搜尋自動下拉 */
+        
+        .search-wrap {
+            position: relative;
+        }
+        
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: var(--dark2);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            max-height: 340px;
+            overflow-y: auto;
+            z-index: 60;
+            display: none;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+        }
+        
+        .search-dropdown.open {
+            display: block;
+        }
+        
+        .sd-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.07);
+            transition: background 0.15s;
+        }
+        
+        .sd-item:last-child {
+            border-bottom: none;
+        }
+        
+        .sd-item:hover {
+            background: var(--dark3);
+        }
+        
+        .sd-thumb {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark);
+            font-size: 20px;
+            overflow: hidden;
+        }
+        
+        .sd-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sd-info {
+            min-width: 0;
+            flex: 1;
+        }
+        
+        .sd-brand {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+        
+        .sd-name {
+            font-size: 12px;
+            color: var(--white);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .sd-price {
+            font-size: 10px;
+            color: var(--gray);
+            margin-top: 1px;
+        }
+        
+        .sd-empty {
+            padding: 16px 14px;
+            font-size: 11px;
+            color: var(--gray2);
+            text-align: center;
+            letter-spacing: 1px;
+        }
         
         .brand-count-label {
             font-size: 10px;
@@ -460,8 +568,13 @@
         }
         /* ══ CATALOG ══ */
         
-        #catalogPage { padding-top: 62px; }
-#listingPage { padding-top: 62px; }
+        #catalogPage {
+            padding-top: 62px;
+        }
+        
+        #listingPage {
+            padding-top: 62px;
+        }
         
         .catalog-header {
             padding: 28px 60px 0;
@@ -809,6 +922,71 @@
         .modal-main-img .prod-photo {
             position: relative;
             z-index: 1;
+        }
+        /* ── 圖片放大 lightbox ── */
+        
+        .modal-main-img {
+            cursor: zoom-in;
+        }
+        
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+        
+        .lightbox-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .lightbox-img {
+            max-width: 92vw;
+            max-height: 88vh;
+            object-fit: contain;
+            cursor: zoom-out;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 22px;
+            right: 24px;
+            background: rgba(8, 8, 8, 0.85);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+        }
+        
+        .lightbox-close:hover {
+            border-color: var(--gold);
+        }
+        
+        @media (max-width: 768px) {
+            .lightbox-overlay {
+                padding: 16px;
+            }
+            .lightbox-close {
+                top: 14px;
+                right: 14px;
+            }
         }
         
         .modal-thumbs {
@@ -2505,26 +2683,44 @@
         /* ══ FEATURED PRODUCT GRID ══ */
         
         .d-feature-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-}
-/* 首頁特色區跑馬燈（>4 件時）*/
-.d-feature-marquee {
-  overflow: hidden; position: relative; width: 100%;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
-}
-.d-feature-marquee-track {
-  display: flex; gap: 2px; width: max-content;
-  animation: dFeatureScroll 40s linear infinite;
-}
-.d-feature-marquee:hover .d-feature-marquee-track { animation-play-state: paused; }
-.d-feature-marquee .d-feature-card { width: 300px; flex-shrink: 0; }
-@keyframes dFeatureScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+        }
+        /* 首頁特色區跑馬燈（>4 件時）*/
+        
+        .d-feature-marquee {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+        }
+        
+        .d-feature-marquee-track {
+            display: flex;
+            gap: 2px;
+            width: max-content;
+            animation: dFeatureScroll 40s linear infinite;
+        }
+        
+        .d-feature-marquee:hover .d-feature-marquee-track {
+            animation-play-state: paused;
+        }
+        
+        .d-feature-marquee .d-feature-card {
+            width: 300px;
+            flex-shrink: 0;
+        }
+        
+        @keyframes dFeatureScroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
         
         .d-feature-card {
             background: var(--dark2);
@@ -2741,9 +2937,18 @@
                 opacity: 1;
             }
             /* Pages padding */
-            #homePage { padding-top: 56px; padding-bottom: 70px; }
-  #catalogPage { padding-top: 56px; padding-bottom: 70px; }
-  #listingPage { padding-top: 56px; padding-bottom: 70px; }
+            #homePage {
+                padding-top: 56px;
+                padding-bottom: 70px;
+            }
+            #catalogPage {
+                padding-top: 56px;
+                padding-bottom: 70px;
+            }
+            #listingPage {
+                padding-top: 56px;
+                padding-bottom: 70px;
+            }
             /* Mobile search top bar */
             .mobile-search-bar {
                 display: flex !important;
@@ -2873,10 +3078,11 @@
             }
             /* Modal: 置中完整卡片（底部保留導覽列空間） */
             .modal-overlay {
-                align-items: center;
+                align-items: flex-start;
                 justify-content: center;
                 padding: 16px;
                 bottom: 62px;
+                overflow-y: auto;
                 /* 遮罩止於底部導覽列上方，讓 nvbar 完整露出 */
             }
             .modal {
@@ -3017,12 +3223,21 @@
                 border-radius: 2px;
                 margin: 0 auto 18px;
             }
-            .checkout-title { font-size: 24px; }
-  .form-row { grid-template-columns: 1fr; gap: 0; }
-  /* iOS 防自動放大：手機版所有輸入框字體需 ≥16px，否則點擊時 Safari 會放大頁面且收鍵盤後不復原 */
-  .form-input, .form-textarea,
-  .search-wrap input,
-  input, textarea { font-size: 16px; }
+            .checkout-title {
+                font-size: 24px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            /* iOS 防自動放大：手機版所有輸入框字體需 ≥16px，否則點擊時 Safari 會放大頁面且收鍵盤後不復原 */
+            .form-input,
+            .form-textarea,
+            .search-wrap input,
+            input,
+            textarea {
+                font-size: 16px;
+            }
             .success-title {
                 font-size: 24px;
             }
@@ -3460,10 +3675,11 @@
         </nav>
         <div class="header-right">
             <div class="search-wrap header-search">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="brandSearch" placeholder="搜尋品牌或商品..." onkeydown="if(event.key==='Enter'){performSearch(this.value);}">
-    </div>
-    <button class="wishlist-btn" onclick="toggleWishlist()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="brandSearch" placeholder="搜尋品牌或商品..." autocomplete="off" oninput="updateSuggest(this.value,'sdDesktop')" onfocus="updateSuggest(this.value,'sdDesktop')" onkeydown="if(event.key==='Enter'){closeSuggest();performSearch(this.value);}">
+                <div class="search-dropdown" id="sdDesktop"></div>
+            </div>
+            <button class="wishlist-btn" onclick="toggleWishlist()">
       ♡ <span class="wl-text">Wishlist</span>
       <span class="wishlist-count" id="wlCount">0</span>
     </button>
@@ -3526,19 +3742,19 @@
                 </div>
             </div>
             <div class="m-section" id="mHotSection" style="margin-top:6px;">
-      <div class="m-sec-head">
-        <div class="m-sec-title">🔥 熱門<em>暢銷</em></div>
-        <button class="m-sec-more" onclick="openListing('hot')">查看全部 →</button>
-      </div>
-      <div class="m-scroll" id="mHotRow"></div>
-    </div>
-    <div class="m-section" id="mNewSection" style="margin-top:6px; padding-bottom:24px;">
-      <div class="m-sec-head">
-        <div class="m-sec-title">✦ 最新<em>上架</em></div>
-        <button class="m-sec-more" onclick="openListing('new')">查看全部 →</button>
-      </div>
-      <div class="m-scroll" id="mNewRow"></div>
-    </div>
+                <div class="m-sec-head">
+                    <div class="m-sec-title">🔥 熱門<em>暢銷</em></div>
+                    <button class="m-sec-more" onclick="openListing('hot')">查看全部 →</button>
+                </div>
+                <div class="m-scroll" id="mHotRow"></div>
+            </div>
+            <div class="m-section" id="mNewSection" style="margin-top:6px; padding-bottom:24px;">
+                <div class="m-sec-head">
+                    <div class="m-sec-title">✦ 最新<em>上架</em></div>
+                    <button class="m-sec-more" onclick="openListing('new')">查看全部 →</button>
+                </div>
+                <div class="m-scroll" id="mNewRow"></div>
+            </div>
             <!-- 完整品牌網格 -->
             <div class="m-section m-section--catalog" style="margin-top:18px;">
                 <div class="m-sec-head">
@@ -3625,18 +3841,18 @@
                     <h3 class="d-section-title">熱門<em>暢銷</em></h3>
                 </div>
                 <button class="d-section-more" id="hotMoreBtn" onclick="openListing('hot')">查看全部 →</button>
-    </div>
-    <div class="d-feature-grid" id="dHotGrid"></div>
-  </div>
+            </div>
+            <div class="d-feature-grid" id="dHotGrid"></div>
+        </div>
 
-  <!-- ── 最新上架 ── -->
-  <div class="d-section" id="newSection">
-    <div class="d-section-head">
-      <div>
-        <div class="d-section-eyebrow">NEW ARRIVALS</div>
-        <h3 class="d-section-title">最新<em>上架</em></h3>
-      </div>
-      <button class="d-section-more" id="newMoreBtn" onclick="openListing('new')">查看全部 →</button>
+        <!-- ── 最新上架 ── -->
+        <div class="d-section" id="newSection">
+            <div class="d-section-head">
+                <div>
+                    <div class="d-section-eyebrow">NEW ARRIVALS</div>
+                    <h3 class="d-section-title">最新<em>上架</em></h3>
+                </div>
+                <button class="d-section-more" id="newMoreBtn" onclick="openListing('new')">查看全部 →</button>
             </div>
             <div class="d-feature-grid" id="dNewGrid"></div>
         </div>
@@ -3649,10 +3865,6 @@
                 <p class="home-sub">探索頂級精品 · 包包 · 飾品 · 配件</p>
             </div>
             <div class="home-search">
-                <div class="search-wrap">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                    <input type="text" id="brandSearch" placeholder="搜尋品牌或商品..." oninput="performSearch(this.value)">
-                </div>
                 <span class="brand-count-label" id="brandCountLabel">12 個品牌</span>
             </div>
             <div class="brand-section" id="brandSectionWrap">
@@ -3697,30 +3909,30 @@
                 <div class="catalog-toolbar-left" id="catalogResultLabel">顯示全部</div>
             </div>
             <div class="product-grid" id="productGrid"></div>
-  </div>
-</div>
-
-<!-- ══ LISTING (熱門暢銷 / 最新上架 全部列表) ══ -->
-<div id="listingPage" class="page">
-  <div class="catalog-header">
-    <button class="back-btn" onclick="goHome()">← 返回首頁</button>
-    <div class="catalog-brand-hero">
-      <div>
-        <div class="catalog-brand-name" id="listingTitle">—</div>
-        <div class="catalog-brand-tagline" id="listingTagline">—</div>
-      </div>
-      <div>
-        <div class="catalog-stat-num" id="listingCount">0</div>
-        <div class="catalog-stat-label">件商品</div>
-      </div>
+        </div>
     </div>
-  </div>
-  <div class="catalog-body">
-    <div class="product-grid" id="listingGrid"></div>
-  </div>
-</div>
 
-<!-- ══ MODAL ══ -->
+    <!-- ══ LISTING (熱門暢銷 / 最新上架 全部列表) ══ -->
+    <div id="listingPage" class="page">
+        <div class="catalog-header">
+            <button class="back-btn" onclick="goHome()">← 返回首頁</button>
+            <div class="catalog-brand-hero">
+                <div>
+                    <div class="catalog-brand-name" id="listingTitle">—</div>
+                    <div class="catalog-brand-tagline" id="listingTagline">—</div>
+                </div>
+                <div>
+                    <div class="catalog-stat-num" id="listingCount">0</div>
+                    <div class="catalog-stat-label">件商品</div>
+                </div>
+            </div>
+        </div>
+        <div class="catalog-body">
+            <div class="product-grid" id="listingGrid"></div>
+        </div>
+    </div>
+
+    <!-- ══ MODAL ══ -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
             <button class="modal-close" onclick="closeModal()">✕</button>
@@ -3754,6 +3966,12 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- ══ IMAGE LIGHTBOX ══ -->
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
     </div>
 
     <!-- ══ WISHLIST DRAWER ══ -->
@@ -3949,7 +4167,8 @@
     <div id="mobileSearchBar" style="display:none; position:fixed; top:56px; left:0; right:0; z-index:49; padding:10px 14px; background:var(--dark); border-bottom:1px solid rgba(201,168,76,0.15); backdrop-filter:blur(12px);">
         <div class="search-wrap" style="max-width:100%;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" id="mobileSearchInput" placeholder="搜尋品牌或商品..." onkeydown="if(event.key==='Enter'){performSearch(this.value);}">
+            <input type="text" id="mobileSearchInput" placeholder="搜尋品牌或商品..." autocomplete="off" oninput="updateSuggest(this.value,'sdMobile')" onfocus="updateSuggest(this.value,'sdMobile')" onkeydown="if(event.key==='Enter'){closeSuggest();performSearch(this.value);}">
+            <div class="search-dropdown" id="sdMobile"></div>
         </div>
     </div>
 
@@ -4786,124 +5005,182 @@
         }
 
         /* ── 搜尋：品牌 + 商品名稱（Issue 1）── */
+        /* ── 搜尋：品牌 + 商品，結果用整頁 listingPage 顯示 ── */
         function performSearch(value) {
             var q = (value || '').trim().toLowerCase();
-            // 同步兩個搜尋框
+            // 同步頂部 + 手機兩個搜尋框
             var dInput = document.getElementById('brandSearch');
             var mInput = document.getElementById('mobileSearchInput');
             if (dInput && dInput.value !== value) dInput.value = value;
             if (mInput && mInput.value !== value) mInput.value = value;
 
-            var brandWrap = document.getElementById('brandSectionWrap');
-            var results = document.getElementById('searchResults');
-
-            // 空字串：回到正常品牌列表
+            // 空字串：回首頁，不做搜尋
             if (!q) {
-                if (brandWrap) brandWrap.style.display = '';
-                if (results) results.style.display = 'none';
-                renderBrands('');
+                goHome();
                 return;
             }
 
-            // 有關鍵字：顯示搜尋結果，隱藏精選品牌列表
-            if (brandWrap) brandWrap.style.display = 'none';
-            if (results) results.style.display = '';
-
-            // 1) 符合的品牌（品牌名 / 縮寫）
-            var matchedBrands = brands.filter(function(b) {
-                return b.name.toLowerCase().indexOf(q) > -1 || b.short.toLowerCase().indexOf(q) > -1;
-            });
-
-            // 2) 符合的商品（商品名 / 編號 / 分類）
-            var matchedProducts = [];
+            // 收集符合的商品（商品名 / 編號 / 分類 / 品牌名 / 縮寫）
+            var matched = [];
             brands.forEach(function(b) {
+                var bMatch = b.name.toLowerCase().indexOf(q) > -1 ||
+                    b.short.toLowerCase().indexOf(q) > -1;
                 (productsByBrand[b.id] || []).forEach(function(p) {
-                    if (p.name.toLowerCase().indexOf(q) > -1 ||
+                    var pMatch = (p.name || '').toLowerCase().indexOf(q) > -1 ||
                         (p.code || '').toLowerCase().indexOf(q) > -1 ||
-                        (p.cat || '').toLowerCase().indexOf(q) > -1) {
-                        matchedProducts.push({
-                            b: b,
+                        (p.cat || '').toLowerCase().indexOf(q) > -1;
+                    if (bMatch || pMatch) {
+                        matched.push({
+                            bId: b.id,
+                            bName: b.name.toUpperCase(),
                             p: p
                         });
                     }
                 });
             });
 
-            // 渲染品牌結果
-            var brandsGroup = document.getElementById('srBrandsGroup');
-            var srBrandGrid = document.getElementById('srBrandGrid');
-            if (matchedBrands.length) {
-                brandsGroup.style.display = '';
-                srBrandGrid.innerHTML = '';
-                matchedBrands.forEach(function(b, i) {
-                    var prods = productsByBrand[b.id] || [];
-                    var card = document.createElement('div');
-                    card.className = 'brand-card';
-                    card.style.animationDelay = (i * 0.04) + 's';
-                    card.innerHTML =
-                        '<div class="brand-logo-area">' + b.short + '</div>' +
-                        '<div class="brand-fullname">' + b.name + '</div>' +
-                        '<div class="brand-meta">' + b.country + ' · ' + b.founded + ' · ' + prods.length + ' 件</div>' +
-                        '<div class="brand-arrow">→</div>';
-                    card.onclick = function() {
-                        searchOpenBrand(b.id);
-                    };
-                    srBrandGrid.appendChild(card);
-                });
-            } else {
-                brandsGroup.style.display = 'none';
-            }
+            // 寫入 listingPage 標題列
+            document.getElementById('listingTitle').textContent = '搜尋：' + value;
+            document.getElementById('listingTagline').textContent = 'SEARCH RESULTS';
+            document.getElementById('listingCount').textContent = matched.length;
 
-            // 渲染商品結果
-            var prodsGroup = document.getElementById('srProdsGroup');
-            var srProductGrid = document.getElementById('srProductGrid');
-            if (matchedProducts.length) {
-                prodsGroup.style.display = '';
-                srProductGrid.innerHTML = '';
-                matchedProducts.forEach(function(item, i) {
-                    var p = item.p,
-                        b = item.b;
+            // 渲染卡片（比照 openListing 的結構）
+            var grid = document.getElementById('listingGrid');
+            grid.innerHTML = '';
+
+            if (!matched.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1; padding:60px 0; text-align:center; color:var(--gray); letter-spacing:1px;">' +
+                    '找不到符合「' + value + '」的品牌或商品<br>' +
+                    '<span style="font-size:11px; color:var(--gray2);">試試其他關鍵字</span></div>';
+            } else {
+                matched.forEach(function(item, i) {
+                    var p = item.p;
                     var inWish = wishlist.find(function(w) {
                         return w.id === p.id;
                     });
                     var card = document.createElement('div');
-                    card.className = 'sr-product-card';
-                    card.style.animationDelay = (i * 0.03) + 's';
+                    card.className = 'product-card';
+                    card.style.animationDelay = (i * 0.035) + 's';
                     card.innerHTML =
-                        '<div class="sr-product-img">' +
+                        '<div class="product-img">' +
                         (p.badge ? '<div class="p-badge">' + p.badge + '</div>' : '') +
                         '<button class="p-wish ' + (inWish ? 'active' : '') + '" data-id="' + p.id + '">' + (inWish ? '♥' : '♡') + '</button>' +
                         thumbContent(p) +
                         '<div class="product-img-overlay"><span>查看詳情</span></div>' +
                         '</div>' +
-                        '<div class="sr-product-info">' +
-                        '<div class="sr-product-brand">' + b.name.toUpperCase() + '</div>' +
-                        '<div class="p-name">' + p.name + '</div>' +
+                        '<div class="product-info">' +
+                        '<div class="d-feature-brand" style="margin-bottom:4px">' + item.bName + '</div>' +
                         '<div class="p-code"># ' + p.code + '</div>' +
+                        '<div class="p-name">' + p.name + '</div>' +
                         '<div class="p-price">' + p.price + '</div>' +
                         '</div>';
                     card.querySelector('.p-wish').onclick = function(e) {
                         e.stopPropagation();
                         quickWish(p.id);
                     };
-                    card.onclick = function(e) {
-                        if (!e.target.closest('.p-wish')) searchOpenProduct(b.id, p.id);
+                    card.querySelector('.product-img').onclick = function(e) {
+                        if (!e.target.closest('.p-wish')) openModal(p);
                     };
-                    srProductGrid.appendChild(card);
+                    card.querySelector('.product-info').onclick = function() {
+                        openModal(p);
+                    };
+                    grid.appendChild(card);
                 });
-            } else {
-                prodsGroup.style.display = 'none';
             }
 
-            // 都沒有結果
-            var empty = document.getElementById('srEmpty');
-            if (!matchedBrands.length && !matchedProducts.length) {
-                empty.style.display = '';
-                document.getElementById('srQueryEcho').textContent = value;
-            } else {
-                empty.style.display = 'none';
-            }
+            currentBrand = null;
+            showPage('listingPage');
+            window.scrollTo(0, 0);
+
+            // 手機版搜尋完收起搜尋列
+            var msb = document.getElementById('mobileSearchBar');
+            if (msb) msb.style.display = 'none';
         }
+
+        /* ── 搜尋自動下拉 ── */
+        function updateSuggest(value, dropdownId) {
+            var q = (value || '').trim().toLowerCase();
+            var dd = document.getElementById(dropdownId);
+            if (!dd) return;
+            if (!q) {
+                dd.classList.remove('open');
+                dd.innerHTML = '';
+                return;
+            }
+
+            // 收集符合的商品（最多 8 筆）
+            var matched = [];
+            for (var i = 0; i < brands.length; i++) {
+                var b = brands[i];
+                var bMatch = b.name.toLowerCase().indexOf(q) > -1 ||
+                    b.short.toLowerCase().indexOf(q) > -1;
+                var prods = productsByBrand[b.id] || [];
+                for (var j = 0; j < prods.length; j++) {
+                    var p = prods[j];
+                    var pMatch = (p.name || '').toLowerCase().indexOf(q) > -1 ||
+                        (p.code || '').toLowerCase().indexOf(q) > -1 ||
+                        (p.cat || '').toLowerCase().indexOf(q) > -1;
+                    if (bMatch || pMatch) {
+                        matched.push({
+                            bId: b.id,
+                            bName: b.name.toUpperCase(),
+                            p: p
+                        });
+                        if (matched.length >= 8) break;
+                    }
+                }
+                if (matched.length >= 8) break;
+            }
+
+            if (!matched.length) {
+                dd.innerHTML = '<div class="sd-empty">找不到符合「' + value + '」的結果</div>';
+                dd.classList.add('open');
+                return;
+            }
+
+            dd.innerHTML = matched.map(function(item) {
+                var p = item.p;
+                var thumb = hasPhotos(p) ?
+                    '<img src="' + p.imgs[0] + '" alt="">' :
+                    (p.emoji || (p.emojis && p.emojis[0]) || '');
+                return '<div class="sd-item" onclick="pickSuggest(\'' + item.bId + '\',\'' + p.id + '\')">' +
+                    '<div class="sd-thumb">' + thumb + '</div>' +
+                    '<div class="sd-info">' +
+                    '<div class="sd-brand">' + item.bName + '</div>' +
+                    '<div class="sd-name">' + p.name + '</div>' +
+                    '<div class="sd-price">' + p.price + '</div>' +
+                    '</div></div>';
+            }).join('');
+            dd.classList.add('open');
+        }
+
+        /* 點下拉項目：直接開該商品 modal（不換頁） */
+        function pickSuggest(brandId, productId) {
+            closeSuggest();
+            var prods = productsByBrand[brandId] || [];
+            var p = prods.find(function(x) {
+                return x.id === productId;
+            });
+            currentBrand = brands.find(function(b) {
+                return b.id === brandId;
+            }) || null;
+            if (p) openModal(p);
+        }
+
+        /* 關閉所有下拉 */
+        function closeSuggest() {
+            ['sdDesktop', 'sdMobile'].forEach(function(id) {
+                var dd = document.getElementById(id);
+                if (dd) {
+                    dd.classList.remove('open');
+                }
+            });
+        }
+
+        /* 點外面關閉下拉 */
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-wrap')) closeSuggest();
+        });
 
         /* 從搜尋結果開啟品牌頁（手機/桌面通用，並還原搜尋狀態） */
         function searchOpenBrand(brandId) {
@@ -4958,8 +5235,8 @@
             document.getElementById('catalogBrandTagline').textContent = currentBrand.tagline;
             document.getElementById('catalogItemCount').textContent = prods.length;
             var bc1 = document.getElementById('breadcrumb');
-  if (bc1) bc1.innerHTML =
-    `<span style="cursor:pointer" onclick="goHome()">全部品牌</span><span class="sep">›</span><span class="brand-name">${currentBrand.name}</span>`;
+            if (bc1) bc1.innerHTML =
+                `<span style="cursor:pointer" onclick="goHome()">全部品牌</span><span class="sep">›</span><span class="brand-name">${currentBrand.name}</span>`;
 
             const cats = ['全部', ...new Set(prods.map(p => p.cat))];
             document.getElementById('catTabs').innerHTML = cats.map(c =>
@@ -4985,17 +5262,21 @@
         }
 
         /* 收集所有標記 hot:true 或 isNew:true 的商品（跨品牌），回傳 {bId,bName,p} 陣列 */
-function getFlagged(flag) {
-  var out = [];
-  brands.forEach(function(b) {
-    (productsByBrand[b.id] || []).forEach(function(p) {
-      if (p[flag]) out.push({ bId: b.id, bName: b.name.toUpperCase(), p: p });
-    });
-  });
-  return out;
-}
+        function getFlagged(flag) {
+            var out = [];
+            brands.forEach(function(b) {
+                (productsByBrand[b.id] || []).forEach(function(p) {
+                    if (p[flag]) out.push({
+                        bId: b.id,
+                        bName: b.name.toUpperCase(),
+                        p: p
+                    });
+                });
+            });
+            return out;
+        }
 
-/* ── FILTER ── */
+        /* ── FILTER ── */
         function filterCat(cat, btn) {
             currentCat = cat;
             document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
@@ -5061,11 +5342,13 @@ function openModal(p) {
   var thumbsEl = document.getElementById('modalThumbs');
   if (hasPhotos(p)) {
     mainEl.innerHTML = '<img class="prod-photo" src="' + p.imgs[0] + '" alt="' + (p.name||'') + '">';
+    mainEl.onclick = function(){ openLightbox(p.imgs[0]); };
     thumbsEl.innerHTML = p.imgs.map(function(src, i){
       return '<div class="modal-thumb ' + (i===0?'active':'') + '" onclick="switchThumbImg(this,\'' + src + '\')">' +
              '<img class="prod-photo" src="' + src + '" alt=""></div>';
     }).join('');
   } else {
+    mainEl.onclick = null;
     mainEl.textContent = p.emojis[0];
     thumbsEl.innerHTML = p.emojis.map(function(e, i){
       return '<div class="modal-thumb ' + (i===0?'active':'') + '" onclick="switchThumb(this,\'' + e + '\')">' + e + '</div>';
@@ -5082,6 +5365,11 @@ function openModal(p) {
   updateModalCartBtn();
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // 每次開啟都把內容捲回頂端，避免沿用上次的捲動位置
+  var mBody = document.querySelector('#modal .modal-body');
+  if (mBody) mBody.scrollTop = 0;
+  var mOv = document.getElementById('modalOverlay');
+  if (mOv) mOv.scrollTop = 0;
 }
 
 function updateModalWishBtn() {
@@ -5104,11 +5392,27 @@ function switchThumbImg(el, src) {
   el.classList.add('active');
   document.getElementById('modalMainImg').innerHTML =
     '<img class="prod-photo" src="' + src + '" alt="">';
+  document.getElementById('modalMainImg').onclick = function(){ openLightbox(src); };
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── 圖片放大 lightbox ── */
+function openLightbox(src) {
+  if (!src) return;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxOverlay').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
 }
 
 /* ── WISHLIST ── */
@@ -5610,12 +5914,11 @@ function mOpenBrand(brandId) {
 }
 
 function mOpenProduct(brandId, productId) {
-  openBrand(brandId);
-  setTimeout(function() {
-    var prods = productsByBrand[brandId] || [];
-    var p = prods.find(function(x){ return x.id === productId; });
-    if (p) openModal(p);
-  }, 80);
+  var prods = productsByBrand[brandId] || [];
+  var p = prods.find(function(x){ return x.id === productId; });
+  // 暫存品牌讓 modal 標題正確，但不切換頁面
+  currentBrand = brands.find(function(b){ return b.id === brandId; }) || null;
+  if (p) openModal(p);
 }
 
 var mBannerIdx = 0, mBannerTimer = null, mBannerTotal = 4;
@@ -5836,12 +6139,11 @@ function renderDFeatureGrid(elId, list) {
 }
 
 function dOpenProduct(brandId, productId) {
-  openBrand(brandId);
-  setTimeout(function() {
-    var prods = productsByBrand[brandId] || [];
-    var p = prods.find(function(x){ return x.id === productId; });
-    if (p) openModal(p);
-  }, 80);
+  var prods = productsByBrand[brandId] || [];
+  var p = prods.find(function(x){ return x.id === productId; });
+  // 暫存品牌，讓 modal 標題正確顯示品牌名，但「不」切換頁面
+  currentBrand = brands.find(function(b){ return b.id === brandId; }) || null;
+  if (p) openModal(p);
 }
 
 /* Banner 輪播 */
