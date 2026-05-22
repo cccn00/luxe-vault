@@ -5507,6 +5507,7 @@ function toggleCart() {
 const LINE_OA_ID = '@884xjbui';
 const LINE_OA_URL = 'https://line.me/R/ti/p/' + encodeURIComponent(LINE_OA_ID);
 const LINE_PERSONAL_URL = 'https://line.me/ti/p/FUwGB3XUtb';
+const ORDER_API = 'https://luxe-vault-backend.onrender.com/api/order';
 
 function openContact() {
   // 設定按鈕連結（點按鈕才跳轉，避免被 popup blocker 擋）
@@ -5774,16 +5775,33 @@ function submitOrder(e) {
   // 顯示成功畫面
   document.getElementById('orderIdValue').textContent = orderId;
 
-  // 保存訂單文字，供「複製」按鈕與自動複製使用
+  // 保存訂單文字，供「複製」按鈕與（備援）手動貼上使用
   window._lastOrderText = orderText;
-
-  // 自動複製訂單到剪貼簿（成功與否都不影響後續流程）
   copyOrderText(orderText);
 
   // LINE 按鈕：直接跳「輕奢寓」官方 LINE 對話/加好友頁
   document.getElementById('orderLineBtn').href = LINE_OA_URL;
 
-  // 切換到成功畫面
+  // 組成要送給後端的訂單物件（在清空購物車「之前」先做好）
+  const orderPayload = {
+    orderId: orderId,
+    date: dateStr,
+    name: info.name,
+    phone: info.phone,
+    line: info.line,
+    addr: info.addr,
+    note: info.note,
+    items: cart.map(function(p) {
+      return {
+        brandName: p.brandName,
+        name: p.name,
+        code: p.code,
+        qty: p.qty || 1
+      };
+    })
+  };
+
+  // 切換到成功畫面（先讓客人看到成功，不卡在等待）
   document.getElementById('checkoutModal').style.display = 'none';
   document.getElementById('successModal').style.display = 'block';
   document.getElementById('checkoutOverlay').classList.add('success-open');
@@ -5791,6 +5809,25 @@ function submitOrder(e) {
   // 清空購物車
   cart = [];
   updateCartUI();
+
+  // 背景送單到後端（後端會自動推到 LINE 群組）
+  fetch(ORDER_API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderPayload)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.ok) {
+      console.log('[order] 已送達後端', orderId);
+    } else {
+      console.log('[order] 後端回報失敗', res);
+    }
+  })
+  .catch(function(err) {
+    // 後端送失敗也不影響客人，他仍可用「複製訂單→貼到 LINE」備援
+    console.log('[order] 送單失敗，改用手動貼上備援', err);
+  });
 }
 
 function closeSuccess() {
