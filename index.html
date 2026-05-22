@@ -3014,8 +3014,10 @@
             }
             .checkout-title { font-size: 24px; }
   .form-row { grid-template-columns: 1fr; gap: 0; }
-  /* iOS 防自動放大：手機版輸入框字體需 ≥16px，否則點擊時 Safari 會放大頁面且收鍵盤後不復原 */
-  .form-input, .form-textarea { font-size: 16px; }
+  /* iOS 防自動放大：手機版所有輸入框字體需 ≥16px，否則點擊時 Safari 會放大頁面且收鍵盤後不復原 */
+  .form-input, .form-textarea,
+  .search-wrap input,
+  input, textarea { font-size: 16px; }
             .success-title {
                 font-size: 24px;
             }
