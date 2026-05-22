@@ -4055,12 +4055,12 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">電話<span class="req">*</span></label>
-                        <input type="tel" class="form-input" id="ckPhone" placeholder="0912-345-678">
+                        <input type="tel" class="form-input" id="ckPhone" placeholder="0912345678" inputmode="numeric">
                         <div class="form-error">請填寫電話</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">LINE ID<span class="req">*</span></label>
-                        <input type="text" class="form-input" id="ckLine" placeholder="您的 LINE ID">
+                        <input type="text" class="form-input" id="ckLine" placeholder="您的 LINE ID" autocapitalize="off" autocorrect="off" spellcheck="false">
                         <div class="form-error">請填寫 LINE ID</div>
                     </div>
                 </div>
@@ -5680,6 +5680,21 @@ function validateCheckout() {
       el.classList.remove('error');
     }
   });
+
+  // 電話：必須只含數字
+  const phoneEl = document.getElementById('ckPhone');
+  if (phoneEl && phoneEl.value.trim() && !/^[0-9]+$/.test(phoneEl.value.trim())) {
+    phoneEl.classList.add('error');
+    valid = false;
+  }
+
+  // LINE ID：只允許半形英數字與 . - _
+  const lineEl = document.getElementById('ckLine');
+  if (lineEl && lineEl.value.trim() && !/^[A-Za-z0-9._-]+$/.test(lineEl.value.trim())) {
+    lineEl.classList.add('error');
+    valid = false;
+  }
+
   return valid;
 }
 
@@ -5843,6 +5858,23 @@ document.addEventListener('input', function(e) {
     e.target.classList.remove('error');
   }
 });
+
+/* 電話：即時過濾，只留數字 */
+(function() {
+  var phoneEl = document.getElementById('ckPhone');
+  if (phoneEl) {
+    phoneEl.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  }
+  /* LINE ID：只留半形英數字與 . - _ */
+  var lineEl = document.getElementById('ckLine');
+  if (lineEl) {
+    lineEl.addEventListener('input', function() {
+      this.value = this.value.replace(/[^A-Za-z0-9._-]/g, '');
+    });
+  }
+})();
 
 /* ── NAV ── */
 function showPage(id) {
