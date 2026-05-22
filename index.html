@@ -5864,7 +5864,7 @@ document.addEventListener('input', function(e) {
   var phoneEl = document.getElementById('ckPhone');
   if (phoneEl) {
     phoneEl.addEventListener('input', function() {
-      this.value = this.value.replace(/[^0-9]/g, '');
+      this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
     });
   }
   /* LINE ID：只留半形英數字與 . - _ */
