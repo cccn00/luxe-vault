@@ -5681,9 +5681,9 @@ function validateCheckout() {
     }
   });
 
-  // 電話：必須只含數字
+  // 電話：必須是 10 位數字
   const phoneEl = document.getElementById('ckPhone');
-  if (phoneEl && phoneEl.value.trim() && !/^[0-9]+$/.test(phoneEl.value.trim())) {
+  if (phoneEl && phoneEl.value.trim() && !/^[0-9]{10}$/.test(phoneEl.value.trim())) {
     phoneEl.classList.add('error');
     valid = false;
   }
