@@ -247,9 +247,14 @@
             width: 100%;
         }
         
-        .search-wrap input::placeholder {
-            color: var(--gray2);
-        }
+        .search-wrap input::placeholder { color:var(--gray2); }
+/* 頂部 header 的搜尋框（取代原本的麵包屑）*/
+.header-search {
+  flex: 0 0 auto; max-width: 260px; width: 260px;
+  padding: 8px 16px; margin-right: 10px;
+}
+.header-search input { font-size: 11px; letter-spacing: 0.5px; }
+@media (max-width: 980px) { .header-search { display: none; } }
         
         .brand-count-label {
             font-size: 10px;
@@ -3454,8 +3459,11 @@
             <button class="top-nav-link" data-nav="contact" onclick="dNav('contact')">聯絡</button>
         </nav>
         <div class="header-right">
-            <div class="breadcrumb" id="breadcrumb"><span>全部品牌</span></div>
-            <button class="wishlist-btn" onclick="toggleWishlist()">
+            <div class="search-wrap header-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="brandSearch" placeholder="搜尋品牌或商品..." onkeydown="if(event.key==='Enter'){performSearch(this.value);}">
+    </div>
+    <button class="wishlist-btn" onclick="toggleWishlist()">
       ♡ <span class="wl-text">Wishlist</span>
       <span class="wishlist-count" id="wlCount">0</span>
     </button>
@@ -3941,7 +3949,7 @@
     <div id="mobileSearchBar" style="display:none; position:fixed; top:56px; left:0; right:0; z-index:49; padding:10px 14px; background:var(--dark); border-bottom:1px solid rgba(201,168,76,0.15); backdrop-filter:blur(12px);">
         <div class="search-wrap" style="max-width:100%;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" id="mobileSearchInput" placeholder="搜尋品牌或商品..." oninput="performSearch(this.value); if(currentBrand==null) showPage('homePage');">
+            <input type="text" id="mobileSearchInput" placeholder="搜尋品牌或商品..." onkeydown="if(event.key==='Enter'){performSearch(this.value);}">
         </div>
     </div>
 
@@ -4949,8 +4957,9 @@
             document.getElementById('catalogBrandName').textContent = currentBrand.name.toUpperCase();
             document.getElementById('catalogBrandTagline').textContent = currentBrand.tagline;
             document.getElementById('catalogItemCount').textContent = prods.length;
-            document.getElementById('breadcrumb').innerHTML =
-                `<span style="cursor:pointer" onclick="goHome()">全部品牌</span><span class="sep">›</span><span class="brand-name">${currentBrand.name}</span>`;
+            var bc1 = document.getElementById('breadcrumb');
+  if (bc1) bc1.innerHTML =
+    `<span style="cursor:pointer" onclick="goHome()">全部品牌</span><span class="sep">›</span><span class="brand-name">${currentBrand.name}</span>`;
 
             const cats = ['全部', ...new Set(prods.map(p => p.cat))];
             document.getElementById('catTabs').innerHTML = cats.map(c =>
@@ -5484,7 +5493,8 @@ function showPage(id) {
 
 function goHome() {
   currentBrand = null; currentCat = '全部';
-  document.getElementById('breadcrumb').innerHTML = '<span>全部品牌</span>';
+  var bc2 = document.getElementById('breadcrumb');
+  if (bc2) bc2.innerHTML = '<span>全部品牌</span>';
   if (typeof resetSearchUI === 'function') resetSearchUI();
   showPage('homePage');
 }
